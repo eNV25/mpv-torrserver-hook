@@ -3,7 +3,8 @@
 The [TorrServer](https://github.com/YouROK/TorrServer) must be installed and running. You must configure the endpoint used by your TorrServer instance. By default `http://localhost:8090` is used.
 
 ```conf
-# ~/.config/mpv/script-opts/torrserver_hook.conf
+# *nix: ~/.config/mpv/script-opts/torrserver_hook.conf
+# Windows: %APPDATA%/mpv/script-opts/torrserver_hook.conf
 server=http://my-server.lan:8090
 ```
 
