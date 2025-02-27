@@ -22,12 +22,13 @@ local function encodeURIComponent(str)
 end
 
 mp.add_hook("on_load", 50, function()
+	msg.debug("torrserver hook")
 	local url = mp.get_property("stream-open-filename")
 	--if url:match("^magnet:.*[?&]xt=urn:bt[im]h:(%w*)&?") then
 	if url:match("^magnet:.*[?&]xt=urn:btih:(%w*)&?") then
 		msg.debug("using " .. url)
 		mp.set_property("stream-open-filename", base_url .. encodeURIComponent(url))
-	elseif url:match("%.torrent$") then
+	elseif url:match("%.torrent$") or url:match("%.torrent[?#].-$") then
 		local res, err = utils.file_info(url)
 		if err then -- if is not local file then
 			msg.debug("using " .. url)
