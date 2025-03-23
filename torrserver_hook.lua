@@ -24,8 +24,7 @@ end
 mp.add_hook("on_load", 50, function()
 	msg.debug("torrserver hook")
 	local url = mp.get_property("stream-open-filename")
-	--if url:match("^magnet:.*[?&]xt=urn:bt[im]h:(%w*)&?") then
-	if url:match("^magnet:.*[?&]xt=urn:btih:(%w*)&?") then
+	if url:match("^magnet:.*[?&]xt=urn:bt[im]h:(%w*)&?") then
 		msg.debug("using " .. url)
 		mp.set_property("stream-open-filename", base_url .. encodeURIComponent(url))
 	elseif url:match("%.torrent$") or url:match("%.torrent[?#].-$") then
