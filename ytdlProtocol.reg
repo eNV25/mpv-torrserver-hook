@@ -1,0 +1,27 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\ytdl]
+@="URL:YTDL Protocol"
+"URL Protocol"=""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\ytdl\DefaultIcon]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\ytdl\shell]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\ytdl\shell\open]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\ytdl\shell\open\command]
+@="\"C:\\Users\\User\\scoop\\apps\\mpv-git\\current\\mpv.exe\" --player-operation-mode=pseudo-gui -- \"%1\""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\magnet]
+@="URL:MAGNET MPV Protocol"
+"URL Protocol"=""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\magnet\DefaultIcon]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\magnet\shell]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\magnet\shell\open]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\magnet\shell\open\command]
+@="\"C:\\Users\\User\\scoop\\apps\\mpv-git\\current\\mpv.exe\" --player-operation-mode=pseudo-gui -- \"%1\""
