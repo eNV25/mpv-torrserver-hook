@@ -7,6 +7,7 @@ local utils = require("mp.utils")
 
 local opts = {
 	server = "http://localhost:8090",
+	rewrite = false,
 }
 
 options.read_options(opts)
@@ -21,42 +22,68 @@ local function encodeURIComponent(str)
 	end)
 end
 
+local function upload_torrent_file(url)
+	msg.debug("uploading " .. url)
+	local res, err = mp.command_native({
+		name = "subprocess",
+		capture_stdout = true,
+		playback_only = false,
+		args = {
+			"curl",
+			"--no-progress-meter",
+			"--variable",
+			"url=" .. url,
+			"--expand-form",
+			"file=@{{url}}",
+			"--header",
+			"accept: application/json",
+			utils.join_path(opts.server, "torrent/upload"),
+		},
+	})
+	if err then
+		msg.error(err)
+		return
+	end
+	return utils.parse_json(res.stdout).hash
+end
+
+local function set_stream_open_filename(url)
+	if opts.rewrite then
+		msg.debug("rewriting " .. url)
+		local res, err = mp.command_native({
+			name = "subprocess",
+			capture_stdout = true,
+			playback_only = false,
+			args = {
+				"curl",
+				"--no-progress-meter",
+				url,
+			},
+		})
+		if err then
+			msg.error(err)
+			return
+		end
+		url = res.stdout:gsub("http://.-/stream/", utils.join_path(opts.server, "stream/"))
+		mp.set_property("stream-open-filename", "memory://" .. url)
+	else
+		msg.debug("using " .. url)
+		mp.set_property("stream-open-filename", url)
+	end
+end
+
 mp.add_hook("on_load", 50, function()
 	msg.debug("torrserver hook")
 	local url = mp.get_property("stream-open-filename")
 	if url:match("^magnet:.*[?&]xt=urn:bt[im]h:(%w*)&?") then
-		msg.debug("using " .. url)
-		mp.set_property("stream-open-filename", base_url .. encodeURIComponent(url))
+		set_stream_open_filename(base_url .. encodeURIComponent(url))
 	elseif url:match("%.torrent$") or url:match("%.torrent[?#].-$") then
-		local res, err = utils.file_info(url)
+		local _, err = utils.file_info(url)
 		if err then -- if is not local file then
-			msg.debug("using " .. url)
-			mp.set_property("stream-open-filename", base_url .. encodeURIComponent(url))
+			set_stream_open_filename(base_url .. encodeURIComponent(url))
 		else -- if is local file
-			msg.debug("uploading " .. url)
-			res, err = mp.command_native({
-				name = "subprocess",
-				capture_stdout = true,
-				playback_only = false,
-				args = {
-					"curl",
-					"--no-progress-meter",
-					"--variable",
-					"url=" .. url,
-					"--expand-form",
-					"file=@{{url}}",
-					"--header",
-					"accept: application/json",
-					utils.join_path(opts.server, "torrent/upload"),
-				},
-			})
-			if err then
-				msg.error(err)
-				return
-			end
-			local hash = utils.parse_json(res.stdout).hash
-			msg.debug("using " .. hash)
-			mp.set_property("stream-open-filename", base_url .. hash)
+			local hash = upload_torrent_file(url)
+			set_stream_open_filename(base_url .. hash)
 		end
 	end
 end)
