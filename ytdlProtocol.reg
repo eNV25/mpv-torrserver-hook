@@ -1,5 +1,18 @@
 Windows Registry Editor Version 5.00
 
+[HKEY_CURRENT_USER\SOFTWARE\Classes\mpv]
+@="URL:MPV Protocol"
+"URL Protocol"=""
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\mpv\DefaultIcon]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\mpv\shell]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\mpv\shell\open]
+
+[HKEY_CURRENT_USER\SOFTWARE\Classes\mpv\shell\open\command]
+@="\"C:\\Users\\User\\scoop\\apps\\mpv-git\\current\\mpv.exe\" --player-operation-mode=pseudo-gui -- \"%1\""
+
 [HKEY_CURRENT_USER\SOFTWARE\Classes\ytdl]
 @="URL:YTDL Protocol"
 "URL Protocol"=""
